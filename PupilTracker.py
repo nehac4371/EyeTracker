@@ -2,11 +2,7 @@ import cv2
 import numpy as np
 import dlib
 
-# # # # #
-# classes
-
 class PupilTrack:
-    
     
     """
     Track pupil of the eye using Webcam.
@@ -48,7 +44,6 @@ class PupilTrack:
         
         output = cv2.connectedComponentsWithStats(threshold_eye, 4)
             
-        #print("Connected components:",output[0])
         stats = output[2]
         centroids = output[3]
         
@@ -60,19 +55,17 @@ class PupilTrack:
             i = i+1
         
         M = max(area)
-        #print("Max Area:",M)
         ind = M[1]
     
         ##getting the centroid of the largest component    
         pupcentre = centroids[ind] 
-        #print("PupilCenter:",pupcentre)
+        
+
         x = int(pupcentre[0])
         y = int(pupcentre[1])
     
         cv2.circle(threshold_eye, (x,y),1,(0,0,0), -1)
         
-        cv2.imshow('pupcent',threshold_eye)
-    
         return pupcentre[0],pupcentre[1]
 
     def get_pupil(self,eye_region,threshold,height,width,gray):
@@ -98,7 +91,8 @@ class PupilTrack:
         
         if type(threshold_eye) is not type(None):
             height, width = threshold_eye.shape
-            cv2.imshow('th_eye',threshold_eye)
+            
+            #cv2.imshow('th_eye',threshold_eye)
     
             x,y =self.get_connected_components(threshold_eye,eye)
         
@@ -121,7 +115,6 @@ class PupilTrack:
             landmarks = self.predictor(gray, faces[0])
 
             eye_region = self.detect_eye([36, 37, 38, 39, 40, 41],landmarks)
-            #eye_region1 = self.detect_eye([42, 43, 44, 45, 46, 47],landmarks)
         
             eye_pnts = self.get_pupil_rect(eye_region)
             
@@ -142,6 +135,8 @@ class PupilTrack:
         self.cap.release()
         cv2.destroyAllWindows()
 
+
+#run the code
 pt = PupilTrack()
 pt.start()
 
